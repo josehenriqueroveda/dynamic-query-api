@@ -1,3 +1,4 @@
+from api.routes.v1.query_route import query_route
 from core.config import settings
 from core.security import request_limiter
 from fastapi import APIRouter
@@ -31,6 +32,7 @@ if settings.BACKEND_CORS_ORIGINS:
 
 
 api_router = APIRouter()
+api_router.include_router(query_route, tags=["Query"])
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 

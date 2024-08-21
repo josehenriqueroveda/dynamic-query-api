@@ -1,11 +1,13 @@
 from core.config import settings
 from sqlalchemy import create_engine
+from sqlalchemy import MetaData
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, pool_pre_ping=True)
+metadata = MetaData()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 ScopedSession = scoped_session(SessionLocal)
 
