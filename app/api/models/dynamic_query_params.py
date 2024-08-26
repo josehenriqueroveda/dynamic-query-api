@@ -1,6 +1,5 @@
 from typing import Any
 from typing import List
-from typing import Optional
 from typing import Union
 
 from pydantic import BaseModel
@@ -23,7 +22,7 @@ class QueryParameters(BaseModel):
 
     select_fields: List[str]
     table_name: str
-    db_schema: Optional[str] = None
-    sort_by: Optional[str] = None
-    sort_order: Optional[str] = "asc"  # Default to "asc"
-    filters: Optional[List[FilterCondition]] = None
+    db_schema: str | None = None
+    sort_by: str | None = None
+    sort_order: str | None = "asc"  # Default to "asc"
+    filters: List[FilterCondition] | None = None

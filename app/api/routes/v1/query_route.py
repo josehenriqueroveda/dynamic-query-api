@@ -1,8 +1,8 @@
 from typing import List
-from typing import Optional
 
 from api.models.dynamic_query_params import FilterCondition
 from api.models.dynamic_query_params import QueryParameters
+from core.config import settings
 from core.db import engine
 from core.db import get_db
 from core.db import metadata
@@ -33,14 +33,23 @@ async def execute_query(
     """
     Execute a dynamic query based on the provided parameters.
     """
-    table = get_table(params.table_name, params.db_schema)
-    query = build_select_query(table, params)
+    try:
+        table = get_table(params.table_name, params.db_schema)
+        query = build_select_query(table, params)
 
-    results = db.execute(query).fetchall()
-    return format_results(results, params.select_fields, table)
+        results = db.execute(query).fetchall()
+
+        if not results:
+            raise HTTPException(status_code=404, detail="Query results not found")
+
+        return format_results(results, params.select_fields, table)
+        
+    except Exception as e:
+        settings.logger.error(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-def get_table(table_name: str, db_schema: Optional[str]):
+def get_table(table_name: str, db_schema: str | None = None):
     """
     Retrieve the SQLAlchemy Table object based on the table name and schema.
     """
@@ -66,7 +75,7 @@ def build_select_query(table: Table, params: QueryParameters):
     return query
 
 
-def apply_filters(query, table: Table, filters: Optional[List[FilterCondition]]):
+def apply_filters(query, table: Table, filters: List[FilterCondition] | None = None):
     """
     Apply filters to the query based on the provided filter conditions.
     """
