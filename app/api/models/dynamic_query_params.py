@@ -24,5 +24,5 @@ class QueryParameters(BaseModel):
     table_name: str
     db_schema: str | None = None
     sort_by: str | None = None
-    sort_order: str | None = "asc"  # Default to "asc"
+    sort_order: str | None = "asc"
     filters: List[FilterCondition] | None = None
