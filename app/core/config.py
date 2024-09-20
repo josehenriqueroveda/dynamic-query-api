@@ -17,6 +17,7 @@ class Settings:
 
     # [Project]
     PROJECT_NAME: str = os.getenv("PROJECT_NAME")
+    DESCRIPTION: str = os.getenv("DESCRIPTION")
     API_V1_STR: str = "/api/v1"
     API_PORT: int = int(os.getenv("API_PORT"))
     VERSION: str = os.getenv("VERSION")

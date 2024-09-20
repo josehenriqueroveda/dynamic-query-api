@@ -2,10 +2,11 @@ from typing import List
 
 from api.models.dynamic_query_params import FilterCondition
 from api.models.dynamic_query_params import QueryParameters
+from app.authentication.depends import token_is_valid
 from core.config import settings
-from core.db import engine
-from core.db import get_db
-from core.db import metadata
+from core.database.db import engine
+from core.database.db import get_db
+from core.database.db import metadata
 from core.security import request_limiter
 from fastapi import APIRouter
 from fastapi import Depends
@@ -19,7 +20,7 @@ from sqlalchemy.exc import NoSuchTableError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import and_
 
-query_route = APIRouter(prefix="/query")
+query_route = APIRouter(prefix="/query", dependencies=[Depends(token_is_valid)])
 limiter = request_limiter.get_limiter()
 
 
@@ -43,7 +44,7 @@ async def execute_query(
             raise HTTPException(status_code=404, detail="Query results not found")
 
         return format_results(results, params.select_fields, table)
-        
+
     except Exception as e:
         settings.logger.error(str(e))
         raise HTTPException(status_code=500, detail=str(e))

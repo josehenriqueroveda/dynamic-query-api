@@ -1,31 +1,29 @@
 import os
-from urllib.parse import quote_plus
+import sys
 
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from fastapi.testclient import TestClient
 from sqlalchemy import text
 
-load_dotenv(dotenv_path="../.env")
+sys.path.append(os.getcwd())
 
-PG_HOST = os.getenv("PG_HOST")
-PG_PORT = os.getenv("PG_PORT")
-PG_DB = os.getenv("PG_DB")
-PG_USER = os.getenv("PG_USER")
-PG_PASSWORD = quote_plus(os.getenv("PG_PASSWORD"))
+from app.core.database.db import engine
+from app.main import app
 
-database_url = f"postgresql+psycopg2://{PG_USER}:{PG_PASSWORD}@{PG_HOST}/{PG_DB}"
+client = TestClient(app)
 
 
-def test_connection():
+def test_db():
     try:
-        engine = create_engine(database_url)
         connection = engine.connect()
         result = connection.execute(text("SELECT 1"))
         assert result.scalar() == 1
         connection.close()
         print("Connection successful")
-    except Exception as e:
-        print(e)
+    except Exception as exc:
+        print(exc)
 
 
-test_connection()
+def test_health():
+    response = client.get("/health-check")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}

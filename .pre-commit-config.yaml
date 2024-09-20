@@ -12,10 +12,8 @@ repos:
     rev: v3.13.0
     hooks:
     -   id: reorder-python-imports
-        exclude: 'alembic/*'
 
 -   repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
     -   id: black
-        exclude: 'alembic/*'

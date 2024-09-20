@@ -15,6 +15,42 @@ This project is an API built with FastAPI that allows dynamic query execution on
 - **Pre-commit** - A tool for managing and enforcing the quality of Python code.
 
 ## Endpoints
+
+### Auth Endpoints
+```http
+POST /api/v1/auth/login
+```
+Logs in a user and returns an access token.
+
+```http
+GET /api/v1/auth/logout
+```
+Logs out a user and returns a message.
+
+### User Endpoints
+
+```http
+GET /api/v1/user/me
+```
+Returns the current user and their token.
+
+```http
+POST /api/v1/user/register
+```
+Registers a new user.
+
+```http
+POST /api/v1/user/disable
+```
+Disables a user.
+
+```http
+PUT /api/v1/user/change-password
+```
+Changes a user's password.
+
+### Query Endpoints
+
 ```http
 POST /api/v1/query/execute
 ```
@@ -54,13 +90,15 @@ curl -X 'POST' \
 - `value`: Value to compare.
 
 
-To run with Uvicorn:
+---
 
-```bash
-uvicorn agro_navi.main:app --port 32809 --reload
-# Choose the port you want to use (32809 is just an example)
-```
-Access the interactive API documentation at: `http://localhost:32809/docs`
+## Deployment
+Use [Docker](https://www.docker.com/).
+See [Docker Compose](https://docs.docker.com/compose/) for more details.
+
+---
+
+Access the interactive API documentation at: `http://localhost:8000/docs`
 
 Pre-commit hooks:
 
